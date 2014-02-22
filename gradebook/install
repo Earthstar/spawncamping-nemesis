@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+echo "deb http://apt.postgresql.org/pub/repos/apt/ wheezy-pgdg main" >> /etc/apt/sources.list.d/pgdg.list
+wget --no-check-certificate --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+apt-get update
+apt-get upgrade
+apt-get install postgresql-9.3
+sed -i 's/peer/trust/g' /etc/postgresql/9.3/main/pg_hba.conf
+sed -i 's/ident/trust/g' /etc/postgresql/9.3/main/pg_hba.conf
+sed -i 's/md5/trust/g' /etc/postgresql/9.3/main/pg_hba.conf
+echo "host    all    all    all    trust" >>  /etc/postgresql/9.3/main/pg_hba.conf
+/etc/init.d/postgresql restart
+psql -U postgres -c "ALTER USER postgres WITH PASSWORD 'password';"
+psql -U postgres -c "CREATE DATABASE HOMEWORK;" 
