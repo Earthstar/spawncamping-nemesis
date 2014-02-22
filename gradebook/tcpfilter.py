@@ -78,13 +78,25 @@ class TCPFilter:
 self.channel[sock].getpeername(),repr(bs), '-', len(bs), 'bytes of', self.bytes_remaining.get(sock, 1e333), 'remaining']
         if (sock in self.timeout and any([
             len(bs) > self.bytes_remaining.get(sock, 1e333),
-            'AAAAA' in bs.upper(),
-            'SELECT' in bs.upper(),
-            'DROP' in bs.upper(),
-            'OR' in bs.upper(),
-            'TABLE' in bs.upper(),
-            '--' in bs.upper()
-            #'*' in bs.upper()
+            'AAAAA' in bs,
+            'SELECT' in bs,
+            'DROP' in bs,
+            #'OR' in bs,
+            'table' in bs,
+            'INSERT' in bs,
+            'insert' in bs,
+            'TABLE' in bs,
+            'drop' in bs,
+            'select' in bs,
+            'from' in bs,
+            'COMEATMEBRO' in bs,
+            'password=doge' in bs
+            #'python-requests' in bs
+            #'--' in bs
+
+            #'python-requests' in bs
+            #'*' in bs
+
                 ])):
             logging.info(pL(*(details + ['(rejected)'])))
             self.on_close(sock)
